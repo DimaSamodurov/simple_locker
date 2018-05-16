@@ -9,7 +9,14 @@ module SimpleLock
     def initializer
       # There is an assumption that this value is greater than Adapter's read/write latency.
       @race_condition_detection_time = 0.01
-      @adapter                       = Rails.cache if defined? Rails
+      @adapter                       = default_adapter
+    end
+
+    private
+
+    def default_adapter
+      return Rails.cache if defined? Rails
+      return MemoryAdapter.new
     end
   end
 
